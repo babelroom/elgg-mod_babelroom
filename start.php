@@ -103,5 +103,3 @@ elgg_register_event_handler('init', 'system', 'babelroom_init');
 elgg_register_event_handler('all', 'object', 'babelroom_object_handler');       
 elgg_register_action("babelroom/join", false, $CONFIG->pluginspath . "babelroom/actions/join.php");
 
-?>
-
