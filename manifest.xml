@@ -13,15 +13,20 @@
 		<version>1.8.0</version>
 	</requires>
 
-<!--	<requires>
-		<type>plugin</type>
-		<name>profile</name>
-	</requires> -->
-	
-<!--	<screenshot>
-		<description>Screenshot Field</description>
-		<path>screenshots/_whats_this_.png</path>
-	</screenshot> -->
+    <screenshot>
+		<description>Plugin Settings</description>
+		<path>screenshots/plugin_settings.png</path>
+	</screenshot>
+
+    <screenshot>
+		<description>Widget</description>
+		<path>screenshots/widget.png</path>
+	</screenshot>
+
+    <screenshot>
+		<description>Room</description>
+		<path>screenshots/room.png</path>
+	</screenshot>
  	
  	<category>BabelRoom</category>
 </plugin_manifest>
