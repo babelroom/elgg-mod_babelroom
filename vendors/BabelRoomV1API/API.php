@@ -61,30 +61,24 @@ function api_status()
 }
 
 /* --- */
-function _util_name($name)
-{
-    // more later -- parse it out
-    return array('first'=>$name, 'last'=>'');
-}
 function BRAPI_create_invitation($babelroom_id, $user, $avatar_url, $is_host, &$result)
 {
-    $name = _util_name($user->name);
     $params = array(
         'return_token' => true,
-        'name' => $name['first'],
+        'name' => $user['first'],
         'user' => array(
-            'name' => $name['first'],
-            'last_name' => $name['last'],
-            'email' => $user->email,
+            'name' => $user['first'],
+            'last_name' => $user['last'],
+            'email' => $user['email'],
             'origin_data' => 'ElggUser(Guid)',
-            'origin_id' => $user->getGUID(),
+            'origin_id' => $user['id'],
 /* other fields of interest ... (in user)
             'phone' => _util_canon_phone($user->phone1),
         enabled
-        langauge
+        language
         banned
 */
-#            'language' => 'en', -- no, server barfs @ 2.37
+#            'language' => $user['language'], -- no, server barfs @ 2.37
             ),
         'avatar_url' => $avatar_url,
         'invitation' => array(

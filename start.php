@@ -46,21 +46,28 @@ function do_join($widget_guid)
         }
     $widget = get_entity($widget_guid);
     $owner_guid = $widget->getOwnerGUID();
-    $user = elgg_get_logged_in_user_entity();
-    if (!$user) { # this is null if not logged in
-        /* BabelRoom doesn't need the user to be logged in. We could just fake out some user details
-        such as "name=Guest" etc. here, but its not implemented this way at present */
-        return _error($so, 'not_logged_in');
+    $elgg_user = elgg_get_logged_in_user_entity();
+
+    $icon = null;
+    $is_host = FALSE;
+    if ($elgg_user) { # this is null if not logged in
+        $user_guid = $elgg_user->getGUID();
+        $icon = $elgg_user->getIconURL('large');
+        $defaulticon = "defaultlarge.gif";  # this is what we end with if there is no icon
+        if (!$icon || (strrpos($icon, $defaulticon)==(strlen($icon)-strlen($defaulticon)))) {
+            $icon = null;   # no icon
+            }
+        /* I'm a host if I'm an administrator on this system or I created the widget */
+        if (($owner_guid == $user_guid /* different types, don't use === */) || $elgg_user->isAdmin()) {
+            $is_host = TRUE;
+            }
+        # parse out name?
+        $user = array('first'=>$elgg_user->name, 'last'=>'', 'email'=>$elgg_user->email, 'id'=>$user_guid, 'language'=>$elgg->language);
         }
-    $user_guid = $user->getGUID();
-    # icon
-    $icon = $user->getIconURL('large');
-    $defaulticon = "defaultlarge.gif";  # this is what we end with if there is no icon
-    if (!$icon || (strrpos($icon, $defaulticon)==(strlen($icon)-strlen($defaulticon)))) {
-        $icon = null;   # no icon
+    else {
+        $user = array('first'=>'Guest', 'last'=>'User', 'id'=>0, 'language'=>'en');
         }
-    /* I'm a host if I own the widget or an administrator on this system */
-    $is_host = (($owner_guid == $user_guid /* different types, don't use === */) || $user->isAdmin());
+
     $result;
     $rc = BRAPI_create_invitation($widget->babelroom_id, $user, $icon, $is_host, $result);
     if (!$rc) {
