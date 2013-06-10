@@ -5,7 +5,9 @@ require_once($CONFIG->pluginspath . "babelroom/vendors/BabelRoomV1API/API.php");
 if (!isset($vars['entity']->babelroom_id)) {
     $vars['entity']->babelroom_name = "My New Room";
     $vars['entity']->babelroom_description = "Description for \"My New Room\"";
-    BRAPI_create($vars['entity']);
+    if (!BRAPI_create($vars['entity'])) {
+        register_error(elgg_echo('babelroom:errors:server_error'));
+        }
     }
 ?>
 <div>

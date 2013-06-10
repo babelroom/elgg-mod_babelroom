@@ -48,6 +48,8 @@ function do_join($widget_guid)
     $owner_guid = $widget->getOwnerGUID();
     $user = elgg_get_logged_in_user_entity();
     if (!$user) { # this is null if not logged in
+        /* BabelRoom doesn't need the user to be logged in. We could just fake out some user details
+        such as "name=Guest" etc. here, but its not implemented this way at present */
         return _error($so, 'not_logged_in');
         }
     $user_guid = $user->getGUID();
@@ -88,15 +90,21 @@ function babelroom_page_handler($page){
 
 /* --- */
 function babelroom_object_handler($event, $object_type, $object) {
+    $rc = TRUE;
     if (isset($object->babelroom_id)) {
         switch($event) {
             case 'update':
-                return BRAPI_update($object);
+                $rc = BRAPI_update($object);
+                break;
             case 'delete':
-                return BRAPI_delete($object);
+                $rc = BRAPI_delete($object);
+                break;
             }
         }
-    return TRUE;
+    if (!$rc) {
+        register_error(elgg_echo('babelroom:errors:server_error'.$msg));
+        }
+    return $rc;
 }
  
 elgg_register_event_handler('init', 'system', 'babelroom_init');       
