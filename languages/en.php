@@ -1,8 +1,7 @@
 <?php
 
     $english = array(
-        'babelroom:errors:not_logged_in' => "You needed to be logged in to do this",
-        'babelroom:errors:server_error' => "Communication error with BabelRoom API server. Please verify settings.",
+        'babelroom:errors:server_error' => "BabelRoom API failed. Please verify settings.",
         
         'babelroom:widgets:edit:name' => "Name",
         'babelroom:widgets:edit:description' => "Description",
