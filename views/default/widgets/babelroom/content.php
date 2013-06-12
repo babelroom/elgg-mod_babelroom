@@ -8,7 +8,7 @@
 
 <?php
 
-echo '<center><form action="/babelroom/join" method="GET">';    # could also POST
+echo '<center><form action="' . elgg_get_site_url() . 'babelroom/join" method="GET">';    # could also POST
 echo elgg_view('input/hidden', array(
     'name' => 'widget_guid',
     'value' => $vars['entity']->getGUID(),
