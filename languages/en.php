@@ -5,6 +5,7 @@
         
         'babelroom:widgets:edit:name' => "Name",
         'babelroom:widgets:edit:description' => "Description",
+        'babelroom:widgets:edit:target' => "Target<br /><table><tr><td><b>_blank</b></td><td>&nbsp;Open meeting in new window</td></tr><tr><td><b>_self|</b><em>empty</em></td><td>&nbsp;Open in current window</td></tr><tr><td><em>framename</em></td><td>&nbsp;Open in specified iframe</td></tr><tr><td><b>...</b></td><td>&nbsp;For more examples, see <a href=\"http://www.w3schools.com/tags/att_form_target.asp\" target=\"_blank\">reference.</a></td></tr></table>",
 
         'babelroom:widgets:view:join' => "Join Room ...",
 

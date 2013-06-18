@@ -5,6 +5,7 @@ require_once($CONFIG->pluginspath . "babelroom/vendors/BabelRoomV1API/API.php");
 if (!isset($vars['entity']->babelroom_id)) {
     $vars['entity']->babelroom_name = "My New Room";
     $vars['entity']->babelroom_description = "Description for \"My New Room\"";
+    $vars['entity']->babelroom_target = "_blank";
     if (!BRAPI_create($vars['entity'])) {
         register_error(elgg_echo('babelroom:errors:server_error'));
         }
@@ -17,5 +18,9 @@ if (!isset($vars['entity']->babelroom_id)) {
 <div>
     <?php echo elgg_echo("babelroom:widgets:edit:description"); ?><br />
     <?php echo elgg_view("input/text"/*"/longtext"*/, array("name" => "params[babelroom_description]", "value" => $vars['entity']->babelroom_description)); ?>
+</div>
+<div>
+    <?php echo elgg_echo("babelroom:widgets:edit:target"); ?>
+    <?php echo elgg_view("input/text", array("name" => "params[babelroom_target]", "value" => $vars['entity']->babelroom_target)); ?>
 </div>
 
