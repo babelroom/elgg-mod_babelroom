@@ -90,19 +90,19 @@ function BRAPI_create_invitation($babelroom_id, $user, $avatar_url, $is_host, &$
 
 function BRAPI_create(&$conference) {
     $params = array(
-        'name' => $conference->babelroom_name,
-        'introduction' => $conference->babelroom_description,
-        'origin_data' => "Elgg/" . get_version(true),
-        'origin_id' => $conference->getGUID(),
+        'name' => $conference['name'],
+        'introduction' => $conference['description'],
+        'origin_data' => "Elgg/" . get_version(true) . "/owner(Guid)",
+        'origin_id' => $conference['owner_guid'],
         );
     $result = null;
     if (!_do_api_call('POST', '/api/v1/conferences', $params, $result) || empty($result->data) || empty($result->data->id))
         return false;
-    $conference->babelroom_id = $result->data->id;
-    $conference->babelroom_url = '/i/'.$result->data->id;
+    $conference['id'] = $result->data->id;
     return true;
 }
 
+/* depreciated -- and no longer compatible
 function BRAPI_update($conference) {
     $params = array('name' => $conference->babelroom_name, 'introduction' => $conference->babelroom_description);
     $result = null;
@@ -112,5 +112,99 @@ function BRAPI_update($conference) {
 function BRAPI_delete($conference) {
     $result = null;
     return _do_api_call('DELETE', '/api/v1/conferences/'.$conference->babelroom_id, array(), $result);
+}
+*/
+
+/* --- higher-level utils --- */
+define("BR_MD_KEY", "babelroom_conference_metadata_key");
+function BRAPI_elgg_getConference($widget){
+    global $_br_conference_id;
+    if ($_br_conference_id!==null) {
+        return $_br_conference_id;  /* we have it (>0), or we tried and failed (==0) */
+        }
+    $_br_conference_id = 0; /* we attempted to retrieve it */
+    $owner_guid = $widget->getOwnerGUID();
+    if (empty($owner_guid)) {
+        register_error(elgg_echo('babelroom:errors:unexpected_internal_error'));
+        return 0;
+        }
+    $md = elgg_get_metadata(array("metadata_names"=>BR_MD_KEY, "guid"=>$owner_guid));
+    if (!empty($md) && count($md) && !empty($md[0]) && isset($md[0]->value) && ($md[0]->value)!=0) { /* overkill? */
+        $_br_conference_id = $md[0]->value;
+        return $_br_conference_id;
+        }
+    return -1;
+}
+
+function BRAPI_elgg_getOrCreateConference($widget){
+    global $_br_conference_id;
+    if (BRAPI_elgg_getConference($widget)>=0)
+        return $_br_conference_id;
+    $tmp_conference = array(
+        'name' => "My New Room",
+        'description' => "Description for \"My New Room\"",
+        'owner_guid' => $owner_guid,
+        );
+    if (BRAPI_create(&$tmp_conference)) {
+        system_messages(elgg_echo('babelroom:messages:new_conference', array($tmp_conference['id'])));
+        } 
+    else {
+        register_error(elgg_echo('babelroom:errors:server_error'));
+        return 0;
+        }
+    $owner_guid = $widget->getOwnerGUID();
+    if (!create_metadata($owner_guid, BR_MD_KEY, $tmp_conference['id'], '', $owner_guid, ACCESS_PUBLIC)) {
+        /* returns false on failure, md if on success */
+        register_error(elgg_echo('babelroom:errors:unexpected_internal_error'));
+        return 0;
+        }
+    return ($_br_conference_id = $tmp_conference['id']);
+}
+
+function BRAPI_elgg_update($widget) {
+    if(isset($widget->babelroom_reset)) {
+        global $_br_conference_id;
+        BRAPI_elgg_getConference($widget);  /* put conference id in $_br_conference_id */
+        if ($_br_conference_id>0) {
+            if (!_do_api_call('DELETE', '/api/v1/conferences/'.$_br_conference_id, array(), $result)) {
+                register_error(elgg_echo('babelroom:errors:server_error'));
+                /* return false; -- continue any anyhow, possibly leaving an unused conference as cruft */
+                }
+            else
+                system_messages(elgg_echo('babelroom:messages:deleted_conference', array($_br_conference_id)));
+            }
+        $owner_guid = $widget->getOwnerGUID();
+        elgg_delete_metadata(array("metadata_names"=>"babelroom_conference_metadata_key", "guid"=>$owner_guid));
+        $_br_conference_id = null;          /* set back to null so subsequent actions will create a new conference */
+        unset($widget->babelroom_reset);    /* don't save the reset flag */
+        }
+    return true;
+}
+
+function BRAPI_elgg_addParticipant($widget, $babelroom_id, &$result) {
+    $owner_guid = $widget->getOwnerGUID();
+    $elgg_user = elgg_get_logged_in_user_entity();
+
+    $icon = null;
+    $is_host = FALSE;
+    if ($elgg_user) { # this is null if not logged in
+        $user_guid = $elgg_user->getGUID();
+        $icon = $elgg_user->getIconURL('large');
+        $defaulticon = "defaultlarge.gif";  # this is what we end with if there is no icon
+        if (!$icon || (strrpos($icon, $defaulticon)==(strlen($icon)-strlen($defaulticon)))) {
+            $icon = null;   # no icon
+            }
+        /* I'm a host if I'm an administrator on this system or I created the widget */
+        if (($owner_guid == $user_guid /* different types, don't use === */) || $elgg_user->isAdmin()) {
+            $is_host = TRUE;
+            }
+        # parse out name?
+        $user = array('first'=>$elgg_user->name, 'last'=>'', 'email'=>$elgg_user->email, 'id'=>$user_guid, 'language'=>$elgg->language);
+        }
+    else {
+        $user = array('first'=>'Guest', 'last'=>'User', 'id'=>0, 'language'=>'en');
+        }
+
+    return BRAPI_create_invitation($babelroom_id, $user, $icon, $is_host, $result);
 }
 

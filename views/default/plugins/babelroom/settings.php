@@ -16,28 +16,16 @@
 
 	echo elgg_view_module("inline", elgg_echo("babelroom:settings:api_key"), $api_key);
 
-	$servers  = "<table>";
-	$servers .= "<tr>";
-	$servers .= "<td>" . elgg_echo("babelroom:settings:servers:room_server") . ":</td>";
-	$servers .= "</tr><tr>";
-    $servers .= "<td>" . elgg_view("input/text", array("name" => "params[room_server]", "value" => $plugin->room_server)) . "</td>";
-	$servers .= "</tr><tr>";
-	$servers .= "<td>" . elgg_echo("babelroom:settings:default") . ": " . BABELROOM_DEFAULT_ROOM_SERVER . "</td>";
-	$servers .= "</tr><tr>";
-	$servers .= '<td><span class="elgg-text-help">' . elgg_echo("babelroom:settings:servers:room_server_description") . "</span></td>";
-	$servers .= "</tr><tr>";
-	$servers .= '<td>&nbsp;</td></tr>';
+	$server .= "<tr>";
+	$server .= "<td>" . elgg_echo("babelroom:settings:server:api_server") . ":</td>";
+	$server .= "</tr><tr>";
+    $server .= "<td>" . elgg_view("input/text", array("name" => "params[api_server]", "value" => $plugin->api_server)) . "</td>";
+	$server .= "</tr><tr>";
+	$server .= "<td>" . elgg_echo("babelroom:settings:default") . ": " . BABELROOM_DEFAULT_API_SERVER . "</td>";
+	$server .= "</tr><tr>";
+	$server .= '<td><span class="elgg-text-help">' . elgg_echo("babelroom:settings:server:api_server_description") . "</span></td>";
+	$server .= "</tr>";
+	$server .= "</table>";
 
-	$servers .= "<tr>";
-	$servers .= "<td>" . elgg_echo("babelroom:settings:servers:api_server") . ":</td>";
-	$servers .= "</tr><tr>";
-    $servers .= "<td>" . elgg_view("input/text", array("name" => "params[api_server]", "value" => $plugin->api_server)) . "</td>";
-	$servers .= "</tr><tr>";
-	$servers .= "<td>" . elgg_echo("babelroom:settings:default") . ": " . BABELROOM_DEFAULT_API_SERVER . "</td>";
-	$servers .= "</tr><tr>";
-	$servers .= '<td><span class="elgg-text-help">' . elgg_echo("babelroom:settings:servers:api_server_description") . "</span></td>";
-	$servers .= "</tr>";
-	$servers .= "</table>";
-
-	echo elgg_view_module("inline", elgg_echo("babelroom:settings:servers"), $servers);
+	echo elgg_view_module("inline", elgg_echo("babelroom:settings:server"), $server);
 
