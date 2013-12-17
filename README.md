@@ -6,10 +6,10 @@ BabelRoom plugin for Elgg (>= 1.8)
 2.38.1a
 ---
 - New elgg plugin for BabelRoom release 2.38, compatible with 2.37
-- this is an **alpha** release -- no major bugs but some minor ones and a few rough corners: feedback appreciated
+- This is an **alpha** release -- no major bugs but some minor ones and a few rough corners: feedback appreciated
 - Almost complete re-write of plugin based on feedback
-- persistent users: babelroom users are sticky to their elgg profile
-- embeddable BabelRoom subwidgets: group chat, P2P (video) conference, presentations and conference entry
+- Persistent users: babelroom users are sticky to their corresponding elgg user
+- Embeddable BabelRoom subwidgets: group chat, P2P (video) conference, presentations and conference entry
 
 2.37.3b
 ---
