@@ -145,7 +145,7 @@ function BRAPI_elgg_getOrCreateConference($widget){
         'description' => "Description for \"My New Room\"",
         'owner_guid' => $owner_guid,
         );
-    if (BRAPI_create(&$tmp_conference)) {
+    if (BRAPI_create($tmp_conference)) {
         system_messages(elgg_echo('babelroom:messages:new_conference', array($tmp_conference['id'])));
         } 
     else {
