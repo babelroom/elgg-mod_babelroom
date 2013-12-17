@@ -14,13 +14,13 @@
     </requires>
 
     <screenshot>
-        <description>Plugin Settings</description>
-        <path>screenshots/plugin_settings.png</path>
+        <description>Profile Page with Widgets</description>
+        <path>screenshots/profile.png</path>
     </screenshot>
 
     <screenshot>
-        <description>Widget</description>
-        <path>screenshots/widget.png</path>
+        <description>Plugin Settings</description>
+        <path>screenshots/plugin_settings.png</path>
     </screenshot>
 
     <screenshot>
