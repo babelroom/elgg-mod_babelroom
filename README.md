@@ -3,7 +3,7 @@ elgg-mod_babelroom
 
 BabelRoom plugin for Elgg (>= 1.8)
 
-2.38.1b
+2.38.2a
 ---
 - Fixed typo which caused Call-time pass-by-reference fatal error
 
