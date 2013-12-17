@@ -88,7 +88,7 @@ function BRAPI_create_invitation($babelroom_id, $user, $avatar_url, $is_host, &$
     return _do_api_call('POST', '/api/v1/add_participant/i/'.$babelroom_id, $params, $result);
 }
 
-function BRAPI_create(&$conference) {
+function BRAPI_create($conference) {
     $params = array(
         'name' => $conference['name'],
         'introduction' => $conference['description'],
