@@ -88,7 +88,7 @@ function BRAPI_create_invitation($babelroom_id, $user, $avatar_url, $is_host, &$
     return _do_api_call('POST', '/api/v1/add_participant/i/'.$babelroom_id, $params, $result);
 }
 
-function BRAPI_create($conference) {
+function BRAPI_create(&$conference) {
     $params = array(
         'name' => $conference['name'],
         'introduction' => $conference['description'],
@@ -125,7 +125,7 @@ function BRAPI_elgg_getConference($widget){
     $_br_conference_id = 0; /* we attempted to retrieve it */
     $owner_guid = $widget->getOwnerGUID();
     if (empty($owner_guid)) {
-        register_error(elgg_echo('babelroom:errors:unexpected_internal_error'));
+        register_error(elgg_echo('babelroom:errors:unexpected_internal_error',array(__LINE__)));
         return 0;
         }
     $md = elgg_get_metadata(array("metadata_names"=>BR_MD_KEY, "guid"=>$owner_guid));
@@ -140,6 +140,7 @@ function BRAPI_elgg_getOrCreateConference($widget){
     global $_br_conference_id;
     if (BRAPI_elgg_getConference($widget)>=0)
         return $_br_conference_id;
+    $owner_guid = $widget->getOwnerGUID();
     $tmp_conference = array(
         'name' => "My New Room",
         'description' => "Description for \"My New Room\"",
@@ -152,10 +153,9 @@ function BRAPI_elgg_getOrCreateConference($widget){
         register_error(elgg_echo('babelroom:errors:server_error'));
         return 0;
         }
-    $owner_guid = $widget->getOwnerGUID();
     if (!create_metadata($owner_guid, BR_MD_KEY, $tmp_conference['id'], '', $owner_guid, ACCESS_PUBLIC)) {
-        /* returns false on failure, md if on success */
-        register_error(elgg_echo('babelroom:errors:unexpected_internal_error'));
+        /* returns false on failure, md id on success */
+        register_error(elgg_echo('babelroom:errors:unexpected_internal_error',array(__LINE__)));
         return 0;
         }
     return ($_br_conference_id = $tmp_conference['id']);

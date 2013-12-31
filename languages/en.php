@@ -5,7 +5,7 @@
         'babelroom:messages:deleted_conference' => "BabelRoom Conference [%d] Deleted.",
 
         'babelroom:errors:server_error' => "BabelRoom API failed. Please verify settings.",
-        'babelroom:errors:unexpected_internal_error' => "An unexpected internal error occurred.",
+        'babelroom:errors:unexpected_internal_error' => "An unexpected internal error occurred, line: %d",
 
         /* settings */
         'babelroom:settings:default' => "Default",
